@@ -10,15 +10,15 @@ import plotly.graph_objects as go
 from streamlit_lottie import st_lottie
 import requests
 
-#set page configuration
+# Set page configuration
 st.set_page_config(
-    page_title = "Personal Library Management System",
-    page_icon = "",
-    layout = "wide",
-    initial_sidebar_state = "expanded"
+    page_title="Personal Library Manager",
+    page_icon="📚",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-#custom css for styling
+# Custom CSS for styling
 st.markdown("""
 <style>
     .main-header {
@@ -29,29 +29,25 @@ st.markdown("""
         text-align: center;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
-            
-    .sub_header {
+    .sub-header {
         font-size: 1.8rem !important;
-        color: 3B82F6;
+        color: #3B82F6;
         font-weight: 600;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
-            
-    .sucess-message {
+    .success-message {
         padding: 1rem;
         background-color: #ECFDF5;
         border-left: 5px solid #10B981;
         border-radius: 0.375rem;
     }
-            
     .warning-message {
-        padding:1rem;
+        padding: 1rem;
         background-color: #FEF3C7;
         border-left: 5px solid #F59E0B;
         border-radius: 0.375rem;
     }
-            
     .book-card {
         background-color: #F3F4F6;
         border-radius: 0.5rem;
@@ -60,12 +56,10 @@ st.markdown("""
         border-left: 5px solid #3B82F6;
         transition: transform 0.3s ease;
     }
-
     .book-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);        
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
-    
     .read-badge {
         background-color: #10B981;
         color: white;
@@ -74,8 +68,7 @@ st.markdown("""
         font-size: 0.875rem;
         font-weight: 600;
     }
-            
-    .unread-badge: {
+    .unread-badge {
         background-color: #F87171;
         color: white;
         padding: 0.25rem 0.75rem;
@@ -83,19 +76,16 @@ st.markdown("""
         font-size: 0.875rem;
         font-weight: 600;
     }
-            
     .action-button {
         margin-right: 0.5rem;
     }
-            
     .stButton>button {
-        border-radius: 0.375rem;  
+        border-radius: 0.375rem;
     }
 </style>
-""",
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
+# Function to load lottie animations
 def load_lottieurl(url):
     try:
         r = requests.get(url)
@@ -104,7 +94,8 @@ def load_lottieurl(url):
         return r.json()
     except:
         return None
-    
+
+# Initialize session state variables
 if 'library' not in st.session_state:
     st.session_state.library = []
 if 'search_results' not in st.session_state:
@@ -116,29 +107,29 @@ if 'book_removed' not in st.session_state:
 if 'current_view' not in st.session_state:
     st.session_state.current_view = "library"
 
-# load library
+# Load library data from file if it exists
 def load_library():
     try:
         if os.path.exists('library.json'):
-            with open('library.json','r') as file:
+            with open('library.json', 'r') as file:
                 st.session_state.library = json.load(file)
-                return True
-            return False
-    except Exception as e:
-        st.error(f"Error loading Library: {e}")
-        return False
-    
-#save library
-def save_library():
-    try:
-        with open('library.json','w') as file:
-            json.dump(st.session_state.library, file)
             return True
+        return False
     except Exception as e:
-        st.error(f"Error loading Library: {e}")
+        st.error(f"Error loading library: {e}")
         return False
 
-# Add a book to library
+# Save library data to file
+def save_library():
+    try:
+        with open('library.json', 'w') as file:
+            json.dump(st.session_state.library, file)
+        return True
+    except Exception as e:
+        st.error(f"Error saving library: {e}")
+        return False
+
+# Add a book to the library
 def add_book(title, author, publication_year, genre, read_status):
     book = {
         'title': title,
@@ -151,9 +142,9 @@ def add_book(title, author, publication_year, genre, read_status):
     st.session_state.library.append(book)
     save_library()
     st.session_state.book_added = True
-    time.sleep(0.5) #animation delay
+    time.sleep(0.5)  # Slight delay for animation effect
 
-#remove books
+# Remove a book from the library
 def remove_book(index):
     if 0 <= index < len(st.session_state.library):
         del st.session_state.library[index]
