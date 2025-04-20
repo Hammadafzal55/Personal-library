@@ -44,7 +44,7 @@ st.markdown("""
     }
     .warning-message {
         padding: 1rem;
-        background-color: #FEF3C7;
+        background-color: #FF0000;
         border-left: 5px solid #F59E0B;
         border-radius: 0.375rem;
     }
